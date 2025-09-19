@@ -112,6 +112,37 @@
             </form>
         </div>
     </div>
+    </div>
+
+    <div class="modal fade" id="viewEmployeeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title">Employee Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Employee Code:</strong> <span id="emp_code"></span></p>
+                    <p><strong>Name:</strong> <span id="name"></span></p>
+                    <p><strong>Email:</strong> <span id="email"></span></p>
+                    <p><strong>Mobile:</strong> <span id="mobile_number"></span></p>
+                    <p><strong>Address:</strong> <span id="address"></span></p>
+                    <p><strong>Gender:</strong> <span id="gender"></span></p>
+                    <p><strong>Type:</strong> <span id="type"></span></p>
+                    <div id="experienceFields" style="display:none;">
+                        <p><strong>Company:</strong> <span id="c_name"></span></p>
+                        <p><strong>Designation:</strong> <span id="designation"></span></p>
+                        <p><strong>Joining Date:</strong> <span id="j_date"></span></p>
+                        <p><strong>End Date:</strong> <span id="e_date"></span></p>
+                    </div>
+                    <img id="profile_image" width="100">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -159,8 +190,9 @@
                     {
                         data: 'id',
                         render: (data) => `
+                        <button class="btn btn-sm btn-warning view" data-id="${data}">View</button>
                     <button class="btn btn-sm btn-primary" onclick="editEmployee(${data})">Edit</button>
-                    <button class="btn btn-sm btn-danger delete" data-id="${data}" ">Delete</button>
+                    <button class="btn btn-sm btn-danger delete" data-id="${data}">Delete</button>
                 `
                     }
                 ]
@@ -267,6 +299,46 @@
                         } else {
                             alert(xhr.responseJSON?.message || 'Something went wrong!');
                         }
+                    }
+                });
+            });
+
+            $(document).on('click', '.view', function() {
+                var id = $(this).data('id');
+
+                $.ajax({
+                    url: '/api/employee_view/' + id,
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(emp) {
+                        // Fill modal with employee details
+                        $('#viewEmployeeModal #emp_code').text(emp.emp_code)
+                        $('#viewEmployeeModal #name').text(emp.name);
+                        $('#viewEmployeeModal #email').text(emp.email);
+                        $('#viewEmployeeModal #mobile_number').text(emp.mobile_number);
+                        $('#viewEmployeeModal #address').text(emp.address);
+                        $('#viewEmployeeModal #gender').text(emp.gender);
+                        $('#viewEmployeeModal #type').text(emp.type);
+
+                        if (emp.type === 'experience') {
+                            $('#viewEmployeeModal #experienceFields').show();
+                            $('#viewEmployeeModal #c_name').text(emp.c_name);
+                            $('#viewEmployeeModal #designation').text(emp.designation);
+                            $('#viewEmployeeModal #j_date').text(emp.j_date);
+                            $('#viewEmployeeModal #e_date').text(emp.e_date);
+                        } else {
+                            $('#viewEmployeeModal #experienceFields').hide();
+                        }
+
+                        $('#viewEmployeeModal #profile_image').attr('src', emp.profile_image);
+
+                        // Show modal
+                        $('#viewEmployeeModal').modal('show');
+                    },
+                    error: function(xhr) {
+                        alert(xhr.responseJSON?.message || 'Something went wrong!');
                     }
                 });
             });

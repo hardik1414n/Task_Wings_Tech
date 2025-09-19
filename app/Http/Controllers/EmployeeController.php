@@ -156,4 +156,11 @@ class EmployeeController extends Controller
 
         return response()->json(['message' => 'Employee updated successfully']);
     }
+
+    public function view($id)
+    {
+        $employee = Employe::findOrFail($id);
+        $employee->profile_image = Storage::url($employee->profile_image);
+        return response()->json($employee);
+    }
 }
