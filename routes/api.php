@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('employee/create',[EmployeeController::class,'create']);
     Route::post('logout',[AuthController::class, 'logout']);
     Route::get('employees',[EmployeeController::class, 'employees']);
+    Route::get('employees_edit/{id}',[EmployeeController::class, 'edit']);
+    Route::delete('employee_delete/{id}',[EmployeeController::class, 'delete']);
+    Route::post('employee_update/{id}',[EmployeeController::class, 'update']);
 });
 
 Route::post('login_check',[AuthController::class,'loginCheck'])->name('api.login.check');
