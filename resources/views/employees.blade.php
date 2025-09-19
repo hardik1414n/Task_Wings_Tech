@@ -46,7 +46,14 @@ $(document).ready(function(){
         { data: 'email' },
         { data: 'mobile_number' },
         { data: 'address' },
-        { data: 'type' }
+        { data: 'type' },
+        {
+                data: 'id',
+                render: (data) => `
+                    <button class="btn btn-sm btn-primary" onclick="editEmployee(${data})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteEmployee(${data})">Delete</button>
+                `
+            }
     ]
     });
 });
