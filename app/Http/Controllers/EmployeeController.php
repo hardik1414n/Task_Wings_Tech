@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
@@ -63,5 +64,15 @@ class EmployeeController extends Controller
             'status'=>true,
             'message'=>'Employee Inserted Successfully'
         ]);
+    }
+
+    public function employees(){
+        $employees = Employe::all();
+
+        foreach ($employees as $employee) {
+            $employee->profile_image = Storage::url($employee->profile_image);
+        }
+
+        return response()->json($employees);
     }
 }

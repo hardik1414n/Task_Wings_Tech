@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('employee/create',[EmployeeController::class,'create']);
     Route::post('logout',[AuthController::class, 'logout']);
+    Route::get('employees',[EmployeeController::class, 'employees']);
 });
 
 Route::post('login_check',[AuthController::class,'loginCheck'])->name('api.login.check');
